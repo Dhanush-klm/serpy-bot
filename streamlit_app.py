@@ -28,7 +28,7 @@ if st.button('Search and Summarize'):
       "engine": "google",
             "q": query,
       "api_key": "81f8af02e883bda0668d2d66290fc9bcbbca7c24c8403b76f38f241269988bd0",
-      "num": 20
+      "num": 15
     }
 
     search = GoogleSearch(params)
