@@ -23,7 +23,7 @@ def summarize_snippets(snippets):
 st.title('SERPY-BOT')
 query = st.sidebar.text_input("Enter your search query:")
 
-if st.button('Search and Summarize'):
+if st.sidebar.button('Search and Summarize'):
     params = {
       "engine": "google",
             "q": query,
