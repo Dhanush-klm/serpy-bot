@@ -16,15 +16,17 @@ def summarize_snippets(snippets):
     except Exception as e:
         return f"An error occurred: {str(e)}"
 
+
+
+
 # Streamlit interface
 st.title('SERPY-BOT')
-# Move input and button to sidebar
-query = st.sidebar.text_input("Enter your search query:")
+query = st.text_input("Enter your search query:")
 
-if st.sidebar.button('Search and Summarize'):
+if st.button('Search and Summarize'):
     params = {
       "engine": "google",
-      "q": query,
+            "q": query,
       "api_key": "81f8af02e883bda0668d2d66290fc9bcbbca7c24c8403b76f38f241269988bd0",
       "num": 15
     }
@@ -36,6 +38,7 @@ if st.sidebar.button('Search and Summarize'):
     links = []
     snippets = []
     
+
     for result in organic_results:
         title = result.get('title')
         snippet = result.get('snippet')
@@ -43,10 +46,14 @@ if st.sidebar.button('Search and Summarize'):
         links.append(link)
         snippets.append(snippet)
         st.markdown(f"**{title}**: {snippet}\n\n")
+        # st.write(f"snippets: {snippets_text}")
 
     # Join snippets into a single text block for summarization
+    # After collecting snippets in the Streamlit app
     snippets_text = " ".join(snippets)
     summary = summarize_snippets(snippets_text)
+    #st.write("Summary:", summary)
 
+    #st.write(f"snippets: {snippets_text}")
     st.markdown("### Summary:")
     st.markdown(f"**{summary}**")  # Display the summary in bold
