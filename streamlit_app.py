@@ -1,6 +1,7 @@
 import streamlit as st
 from serpapi import GoogleSearch
 from transformers import pipeline
+api_key = st.secrets["SERP_API"]
 
 def summarize_snippets(snippets):
     model_name = "sshleifer/distilbart-cnn-12-6"
@@ -27,7 +28,7 @@ if st.button('Search and Summarize'):
     params = {
       "engine": "google",
             "q": query,
-      "api_key": "81f8af02e883bda0668d2d66290fc9bcbbca7c24c8403b76f38f241269988bd0",
+      "api_key": api_key,
       "num": 15
     }
 
