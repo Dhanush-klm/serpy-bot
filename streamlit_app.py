@@ -21,7 +21,7 @@ def summarize_snippets(snippets):
 
 # Streamlit interface
 st.title('SERPY-BOT')
-query = st.text_input("Enter your search query:")
+query = st.sidebar.text_input("Enter your search query:")
 
 if st.button('Search and Summarize'):
     params = {
