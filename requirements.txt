@@ -4,3 +4,4 @@ transformers
 google-search-results
 torch
 google-serp-api
+googlesearch-python
