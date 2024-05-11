@@ -1,19 +1,20 @@
 import streamlit as st
 from serpapi import GoogleSearch
 from transformers import pipeline
+import logging
+
+# Setup basic logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def summarize_snippets(snippets):
     model_name = "sshleifer/distilbart-cnn-12-6"
     revision = "a4f8f3e"
-    summarizer = pipeline("summarization", model=model_name, revision=revision)
+    summarizer = pipeline("summarization", model=model_name, revision=revision, use_auth_token=True)  # Adjusted for huggingface_hub updates
     try:
-        # Increase max_length and min_length for longer summaries
-        summary = summarizer(snippets, max_length=250, min_length=200)  # Adjusted values
-        if summary and 'summary_text' in summary[0]:
-            return summary[0]['summary_text']
-        else:
-            return "No summary available."
+        summary = summarizer(snippets, max_length=1000, min_length=200)
+        return summary[0]['summary_text'] if summary else "No summary available."
     except Exception as e:
+        logging.error("Failed to summarize: %s", str(e))
         return f"An error occurred: {str(e)}"
 
 # Streamlit interface
@@ -24,46 +25,28 @@ if st.button('Search and Summarize'):
     params = {
       "engine": "google",
       "q": query,
-      "api_key": "81f8af02e883bda0668d2d66290fc9bcbbca7c24c8403b76f38f241269988bd0",
+      "api_key": "your_api_key_here",  # Ensure using the correct API key
       "num": 15
     }
 
-    search = GoogleSearch(params)
-    results = search.get_dict()
-    organic_results = results.get("organic_results", [])
-    answer_box = results.get("answer_box", {})
+    try:
+        search = GoogleSearch(params)
+        results = search.get_dict()
+        organic_results = results.get("organic_results", [])
+        answer_box = results.get("answer_box", {})
 
-    links = []
-    snippets = []
-    
-    for result in organic_results:
-        title = result.get('title')
-        snippet = result.get('snippet')
-        link = result.get('link')
-        if snippet:  # Ensure snippet is not None
-            snippets.append(snippet)
-        links.append(link)
-        st.markdown(f"**{title}**: {snippet}\n\n")
+        snippets = [result.get('snippet') for result in organic_results if result.get('snippet')]
+        
+        # Extract answer box content
+        if answer_box:
+            snippets.extend([value for key, value in answer_box.items() if key in ['snippet', 'title', 'description', 'linked_snippet'] and value])
+        
+        snippets_text = " ".join(snippets)
+        summary = summarize_snippets(snippets_text)
+        st.markdown("### Summary:")
+        st.markdown(f"**{summary}**")
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+        logging.error("Error processing search or summarization: %s", str(e))
 
-    # Print the snippets list for debugging or review
-    # st.write("Collected Snippets:")
-    # st.write(snippets)  # Using st.write to print the list of snippets
-
-    # Handle answer box content; include relevant fields like title or snippets
-    if answer_box:
-        if 'snippet' in answer_box and answer_box['snippet']:
-            snippets.append(answer_box['snippet'])
-        if 'title' in answer_box and answer_box['title']:
-            snippets.append(answer_box['title'])
-
-    # Append other data that could be relevant from the answer box
-    for key in ['description', 'linked_snippet']:
-        if key in answer_box and answer_box[key]:
-            snippets.append(answer_box[key])
-
-    # Ensure all elements in snippets are strings and not None before joining
-    snippets_text = " ".join(filter(None, snippets))
-    summary = summarize_snippets(snippets_text)
-    st.markdown("### Summary:")
-    st.markdown(f"**{summary}**")  # Display the summary in bold
-    st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
+st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
