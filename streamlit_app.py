@@ -34,6 +34,7 @@ if st.button('Search and Summarize'):
     search = GoogleSearch(params)
     results = search.get_dict()
     organic_results = results.get("organic_results", [])
+    answer_box = results.get("answer_box", [])
 
     links = []
     snippets = []
@@ -58,3 +59,10 @@ if st.button('Search and Summarize'):
     st.markdown("### Summary:")
     st.markdown(f"**{summary}**")  # Display the summary in bold
     st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
+
+    # Print answer box in Streamlit
+    st.markdown("### Answer Box:")
+    st.markdown(f"**{answer_box}**")  # Display the answer box in bold
+    st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
+
+
