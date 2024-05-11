@@ -55,6 +55,7 @@ if st.button('Search and Summarize'):
     # Join snippets into a single text block for summarization
     snippets_text = " ".join(snippets)
     summary = summarize_snippets(snippets_text)
+    st.write("snippets_text")
     st.markdown("### Summary:")
     st.markdown(f"**{summary}**")  # Display the summary in bold
     st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
