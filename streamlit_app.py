@@ -50,7 +50,7 @@ if st.button('Search and Summarize'):
         # st.write(f"snippets: {snippets_text}")
 
     # Add snippet from answer box to snippets list
-    snippets.append(answer_box['snippet'])
+    #snippets.append(answer_box['snippet'])
 
     # Join snippets into a single text block for summarization
     # After collecting snippets in the Streamlit app
