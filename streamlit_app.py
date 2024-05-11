@@ -16,9 +16,6 @@ def summarize_snippets(snippets):
     except Exception as e:
         return f"An error occurred: {str(e)}"
 
-
-
-
 # Streamlit interface
 st.title('SERPY-BOT')
 query = st.text_input("Enter your search query:")
@@ -26,7 +23,7 @@ query = st.text_input("Enter your search query:")
 if st.button('Search and Summarize'):
     params = {
       "engine": "google",
-            "q": query,
+      "q": query,
       "api_key": "81f8af02e883bda0668d2d66290fc9bcbbca7c24c8403b76f38f241269988bd0",
       "num": 15
     }
@@ -34,12 +31,11 @@ if st.button('Search and Summarize'):
     search = GoogleSearch(params)
     results = search.get_dict()
     organic_results = results.get("organic_results", [])
-    answer_box = results.get("answer_box", [])
+    answer_box = results.get("answer_box", {})
 
     links = []
     snippets = []
     
-
     for result in organic_results:
         title = result.get('title')
         snippet = result.get('snippet')
@@ -47,22 +43,22 @@ if st.button('Search and Summarize'):
         links.append(link)
         snippets.append(snippet)
         st.markdown(f"**{title}**: {snippet}\n\n")
-        # st.write(f"snippets: {snippets_text}")
 
-    # Add snippet from answer box to snippets list
-    #snippets.append(answer_box['snippet'])
+    # Add all relevant content from answer box to snippets list
+    if answer_box:
+        if 'snippet' in answer_box:
+            snippets.append(answer_box['snippet'])
+        if 'title' in answer_box:
+            snippets.append(answer_box['title'])
+        # Append other relevant answer box data as needed
+        for key, value in answer_box.items():
+            if key not in ['snippet', 'title']:
+                snippets.append(str(value))
 
     # Join snippets into a single text block for summarization
-    # After collecting snippets in the Streamlit app
     snippets_text = " ".join(snippets)
     summary = summarize_snippets(snippets_text)
-    #st.write("Summary:", summary)
-
-    #st.write(f"snippets: {snippets_text}")
     st.markdown("### Summary:")
     st.markdown(f"**{summary}**")  # Display the summary in bold
     st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
     st.write(answer_box)
-
-
-
