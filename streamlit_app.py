@@ -33,12 +33,20 @@ if st.button('Search and Summarize'):
     organic_results = results.get("organic_results", [])
     answer_box = results.get("answer_box", {})
 
+    links = []
     snippets = []
     
     for result in organic_results:
+        title = result.get('title')
         snippet = result.get('snippet')
-        if snippet:
-            snippets.append(snippet)
+        link = result.get('link')
+        links.append(link)
+        snippets.append(snippet)
+        st.markdown(f"**{title}**: {snippet}\n\n")
+
+    # Print the snippets list for debugging or review
+    # st.write("Collected Snippets:")
+    # st.write(snippets)  # Using st.write to print the list of snippets
 
     # Handle answer box content; include relevant fields like title or snippets
     if answer_box:
@@ -55,7 +63,6 @@ if st.button('Search and Summarize'):
     # Join snippets into a single text block for summarization
     snippets_text = " ".join(snippets)
     summary = summarize_snippets(snippets_text)
-    st.write("snippets_text")
     st.markdown("### Summary:")
     st.markdown(f"**{summary}**")  # Display the summary in bold
     st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
