@@ -40,8 +40,9 @@ if st.button('Search and Summarize'):
         title = result.get('title')
         snippet = result.get('snippet')
         link = result.get('link')
+        if snippet:  # Ensure snippet is not None
+            snippets.append(snippet)
         links.append(link)
-        snippets.append(snippet)
         st.markdown(f"**{title}**: {snippet}\n\n")
 
     # Print the snippets list for debugging or review
@@ -60,8 +61,8 @@ if st.button('Search and Summarize'):
         if key in answer_box and answer_box[key]:
             snippets.append(answer_box[key])
 
-    # Join snippets into a single text block for summarization
-    snippets_text = " ".join(snippets)
+    # Ensure all elements in snippets are strings and not None before joining
+    snippets_text = " ".join(filter(None, snippets))
     summary = summarize_snippets(snippets_text)
     st.markdown("### Summary:")
     st.markdown(f"**{summary}**")  # Display the summary in bold
