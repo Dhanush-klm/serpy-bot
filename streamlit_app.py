@@ -49,6 +49,9 @@ if st.button('Search and Summarize'):
         st.markdown(f"**{title}**: {snippet}\n\n")
         # st.write(f"snippets: {snippets_text}")
 
+    # Add snippet from answer box to snippets list
+    snippets.append(answer_box['snippet'])
+
     # Join snippets into a single text block for summarization
     # After collecting snippets in the Streamlit app
     snippets_text = " ".join(snippets)
@@ -60,9 +63,5 @@ if st.button('Search and Summarize'):
     st.markdown(f"**{summary}**")  # Display the summary in bold
     st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
 
-    # Print answer box in Streamlit
-    st.markdown("### Answer Box:")
-    st.markdown(f"**{answer_box}**")  # Display the answer box in bold
-    st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
 
 
