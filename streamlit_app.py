@@ -50,10 +50,7 @@ if st.button('Search and Summarize'):
             snippets.append(answer_box['snippet'])
         if 'title' in answer_box:
             snippets.append(answer_box['title'])
-        # Append other relevant answer box data as needed
-        for key, value in answer_box.items():
-            if key not in ['snippet', 'title']:
-                snippets.append(str(value))
+        
 
     # Join snippets into a single text block for summarization
     snippets_text = " ".join(snippets)
