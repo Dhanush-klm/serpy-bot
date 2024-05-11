@@ -33,22 +33,24 @@ if st.button('Search and Summarize'):
     organic_results = results.get("organic_results", [])
     answer_box = results.get("answer_box", {})
 
-    links = []
     snippets = []
     
     for result in organic_results:
-        title = result.get('title')
         snippet = result.get('snippet')
-        link = result.get('link')
-        if snippet:  # Ensure snippet is not None
+        if snippet:
             snippets.append(snippet)
-        st.markdown(f"**{title}**: {snippet}\n\n")
 
-    # Add all relevant content from answer box to snippets list
+    # Handle answer box content; include relevant fields like title or snippets
     if answer_box:
-        for key, value in answer_box.items():
-            if value and isinstance(value, str):  # Ensure value is not None and is a string
-                snippets.append(value)
+        if 'snippet' in answer_box and answer_box['snippet']:
+            snippets.append(answer_box['snippet'])
+        if 'title' in answer_box and answer_box['title']:
+            snippets.append(answer_box['title'])
+
+    # Append other data that could be relevant from the answer box
+    for key in ['description', 'linked_snippet']:
+        if key in answer_box and answer_box[key]:
+            snippets.append(answer_box[key])
 
     # Join snippets into a single text block for summarization
     snippets_text = " ".join(snippets)
@@ -56,4 +58,3 @@ if st.button('Search and Summarize'):
     st.markdown("### Summary:")
     st.markdown(f"**{summary}**")  # Display the summary in bold
     st.markdown("<style>body {background-color: black;}</style>", unsafe_allow_html=True)  # Change the background to black
-    st.write(answer_box)
