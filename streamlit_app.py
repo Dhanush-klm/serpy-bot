@@ -8,7 +8,7 @@ def summarize_snippets(snippets):
     summarizer = pipeline("summarization", model=model_name, revision=revision)
     try:
         # Increase max_length and min_length for longer summaries
-        summary = summarizer(snippets, max_length=1000, min_length=200)  # Adjusted values
+        summary = summarizer(snippets, max_length=250, min_length=200)  # Adjusted values
         if summary and 'summary_text' in summary[0]:
             return summary[0]['summary_text']
         else:
