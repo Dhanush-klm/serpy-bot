@@ -47,7 +47,7 @@ if st.button('Search and Summarize'):
 
     # Print the snippets list for debugging or review
     # st.write("Collected Snippets:")
-    # st.write(snippets)  # Using st.write to print the list of snippets
+    st.write(links)  # Using st.write to print the list of snippets
 
     # Handle answer box content; include relevant fields like title or snippets
     if answer_box:
